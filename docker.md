@@ -1,152 +1,146 @@
 
-### 1: Desarrollar, Distribuir y Ejecutar aplicaciones con Docker
+### 1: DESARROLLAR, DISTRIBUIR Y EJECUTAR CON DOCKER
 
 #### Problems when building:
 - Development dependencies (packages)
--	Runtime versions
--	Equivalence of development environments (code sharing)
--	Equivalence of production environments(go to production)
--	Versions / compatibility(integration of other services e.g.: databases)
+- Runtime versions
+- Equivalence of development environments (code sharing)
+- Equivalence of production environments(go to production)
+- Versions / compatibility(integration of other services e.g.: databases)
 #### Problems when distributing:
--	Different build generations
--	Access to production servers
--	Native vs. distributed execution
--	Serverless
+- Different build generations
+- Access to production servers
+- Native vs. distributed execution
+- Serverless
 #### Problems when executing:
--	Application dependencies
--	Operating System Compatibility
--	Availability of external services
--	Hardware Resources
+- Application dependencies
+- Operating System Compatibility
+- Availability of external services
+- Hardware Resources
 #### Docker allows: Build, distribute and run your code anywhere without worrying.
 
 - Version de docker instalada
 ```console
-  > docker --version
+docker --version
 ```
 - Información de docker
 ```console
-  > docker info
+docker info
 ```
 
 ### COMANDOS
 - Ejecutar un contenedor a partir de una imagen
 ```console
-  > docker run <image>
-  > docker run <image> --name <container-name>  <-- (--name) para especificar un nombre al contenedor
-  > docker run -it <image>  <-- (-it) para ejecutar en modo interactivo
-  > docker run -itd <image>  <-- (-d) para ejecutar en modo detach: no se vincula la I/O estandar con la CLI, sino vinculada en background
+docker run <image>
+docker run --name <container-name> <image>  <-- (--name) para especificar un nombre al contenedor
+docker run -it <image>  <-- (-it) para ejecutar en modo interactivo
+docker run -itd <image>  <-- (-d) para ejecutar en modo detach: no se vincula la I/O estandar con la CLI, sino vinculada en background
 ```
 - Ver los contenedores que están corriendo
 ```console
-  > docker ps
-  > docker ps -a  <-- (-a) para tambien listar los contenedores detenidos
+docker ps
+docker ps -a  <-- (-a) para tambien listar los contenedores detenidos
 ```
 - Detener un contenedor
 ```console
-  > docker stop <container-id-or-name>
+docker stop <container-id-or-name>
 ```
 - Eliminar contenedores
 ```console
-  > docker rm <container-id-or-name>  <-- elimina contenedores que estan detenidos
-  > docker rm -f <container-id-or-name>  <-- forza la eliminacion de contenedores que estan corriendo
-  > docker container prune  <-- elimina todos los contenedores
-  > docker run --rm -p <image>  <-- eliminar un contenedor una vez que se detenga
+docker rm <container-id-or-name>  <-- elimina contenedores que estan detenidos
+docker rm -f <container-id-or-name>  <-- forza la eliminacion de contenedores que estan corriendo
+docker container prune  <-- elimina todos los contenedores
+docker run --rm -p <image>  <-- eliminar un contenedor una vez que se detenga
 ```
 - Inspeccionar un contenedor
 ```console
-  > docker inspect <container-id-or-name>
+docker inspect <container-id-or-name>
 ```
 - Renombrar un contenedor
 ```console
-  > docker rename <initial-container-name> <target-container-name>
+docker rename <initial-container-name> <target-container-name>
 ```
-No se permite tener dos contenedores con el mismo name
+No se permite tener dos contenedores con el mismo nombre
+
 ### CICLO DE VIDA DE UN CONTENEDOR
-Un contenedor se mantiene activo si el proceso principal (command) esté corriendo: por ejemplo: ejecutar el bash de ubuntu en modo interactivo, si detenemos con "exit", se termina el bash y por ende el contenedor se detiene.
-- correr un contenedor sobrescribiendo el comando principal bash para que el contenedor permanezca levantado
+Un contenedor se mantiene activo si el proceso principal (command) esté corriendo: por ejemplo ejecutar el bash de ubuntu en modo interactivo, si lo detenemos con "exit", se termina el bash y por ende el contenedor se detiene.
+- Correr un contenedor sobrescribiendo el comando principal bash para que el contenedor permanezca levantado y en modo detach
 ```console
-  > docker run --name <container-name> -d <image> tail -f <main-command>
-  > docker run --name always-up -d ubuntu tail -f /dev/null <- aqui un contenedor de ubuntu se crea y se ejecuta pero se sobreescribe el proceso principal, el contenedor se mantiene levantado
+docker run --name <container-name> -d <image> tail -f <main-command>
+docker run --name always-up -d ubuntu tail -f /dev/null  <-- aqui un contenedor de ubuntu se crea y se ejecuta pero se sobreescribe el proceso principal, el contenedor se mantiene levantado
 ```
 - Ejecutar un comando en un contenedor existente y que está corriendo
 ```console
-  > docker exec -it <container-[name,id]> <command>
-  > docker exec -it always-up bash   <— aquí bash no es el proceso principal, asi que se lo puede terminar pero el contenedor no va a terminar
+docker exec -it <container-[name,id]> <command>
+docker exec -it always-up bash   <— aquí bash no es el proceso principal, asi que se lo puede terminar pero el contenedor ahorab ya no va a terminar
 ```
-- inspeccionar un contenedor, filtrar y retornar el Pid (esto devuelve el process id principal del contenedor)
+- Inspeccionar el process id principal del contenedor
 ```console
-  > docker inspect --format '{{.State.Pid}}' <container-name>
+docker inspect --format '{{.State.Pid}}' <container-name>
 ```
-cada contenedor tiene su propio Stack de networking (su propia interfaz de red virtual)
-- Exponer un puerto en la máquina host (-p)
+Cada contenedor tiene su propio Stack de networking (su propia interfaz de red virtual)
+- Exponer un puerto del contenedor (-p)
 ```console
-  > docker run -d --name <container-name> -p <exposed-port>:<container-port>
-  > docker run -d -name proxy -p 8080:80 proxy.  <—— PORT = 0.0.0.0:8080->80/tcp, :::8080->80/tcp
+docker run -d --name <container-name> -p <exposed-port>:<container-port> <image>
+docker run -d --name proxy -p 8080:80 proxy  <-- aqui se expone el puerto 80 del contenedor en el puerto 8080 del host mientras se ejecuta el contenedor en modo detach
 ```
 ### VER LOS LOGS DE UN CONTENEDOR
 ```console
-(1)
-  > docker logs <container-id-or-name>
-(2)
-  > docker logs -f <container-id-or-name>  <- Enchufarse a los logs
-(3)
-  > docker logs --tail <number> -f <container-id-or-name>. <- ver solo las ultimas <number> entradas de log
+docker logs <container-id-or-name>
+docker logs -f <container-id-or-name>   <-- (-f) Enchufarse a los logs
+docker logs --tail <number> -f <container-id-or-name>   <-- (--tail) ver solo las ultimas <number> entradas de log
 ```
 ### BIND MOUNTS
 - Crear un bind mount para una conexion bidireccional de archivos
 ```console
-  > docker run -d --name <container-name> -v <host-folder-or-file>:<docker-folder-or-file> <image>
-  > docker run -d --name db -v /Users/jeffersonpazmino/dockerdata:/data/db mongo
+docker run -d --name <container-name> -v <host-folder-or-file>:<docker-folder-or-file> <image>
+docker run -d --name db -v /Users/jeffersonpazmino/dockerdata:/data/db mongo
 ```
 ### IMAGENES
 - Ver imágenes en el entorno local
 ```console
-  > docker image ls
+docker image ls
 ```
 - Traer una imagen de docker hub (hub.docker.com)
 ```console
-  > docker pull <image>
-  > docker pull <image>:<tag>. <- un <tag> es la version de la imagen, si no la especificamos de asume el tag latest
+docker pull <image>
+docker pull <image>:<tag>  <-- un <tag> es la version de la imagen, si no la especificamos de asume el tag latest
 ```
 ### CREAR IMAGENES
-- Con un archivo llamado Dockerfile y el comando build
+- 1. Crear un archivo llamado Dockerfile que sirve para crear imagenes con nuevas capas
 #### Dockerfile
 ```
 FROM alpine:3.14
 RUN touch ~/new_dir
 ```
-- Crear la imagen con el contexto . (Donde se encuentra el Dockerfile)
+- 2. Crear la imagen con el contexto . (Donde se encuentra el Dockerfile)
 ```console
-  > docker build -t alpine:custom .
+docker build -t alpine:custom .
 ```
-- Ahora se puede crear un contenedor de la imagen creada
+- 3. Crear un contenedor con la imagen nueva
 ```console
-> docker run -it alpine:custom
+docker run -it alpine:custom
 ```
+- 4. Ver las capas de una imagen
+```console
+docker history alpine:custom
+```
+- 5. Con el comando "dive alpine:custom" se puede ver mejor el history https://github.com/wagoodman/dive
+
 ### PUBLICAR IMAGENES
-- Retaggear una imagen para subirla
+- 1. Retaggear la imagen con el nombre del repositorio para subirla
 ```console
-> docker tag alpine:custom <repository-username>:custom
+docker tag alpine:custom <repository-username>:custom
 ```
-- Publicar la imagen
+- 2. Publicar la imagen
 ```console
-  > docker login
-  > docker push <repository-username>:custom
+docker login
+docker push <repository-username>:custom
 ```
-VER LAS CAPAS DE UNA IMAGEN
-```console
-> docker history alpine:custom
-```
-Con >  dive alpine:custom se puede ver mejor el history
-https://github.com/wagoodman/dive
+Cuando se corre un contenedor, docker ofrece una nueva capa mutable de este. Con docker commit se puede crear una capa inmutable a partir de los cambios hechos en la capa mutable del contenedor creado.
 
-- Cuando se corre un contenedor, docker ofrece una nueva capa mutable a este
-
-- Con docker commit se puede crear una capa inmutable a partir de los cambios hechos en la capa mutable del contenedor creado.
-
-### 19 Proyecto node: imágenes y redes de docker
-#### proyecto: git clone https://github.com/platzi/docker
-- El archivo Dockerfile sirve para crear imagenes con nuevas capas
+### 19: PROYECTO NODE. IMAGENES Y REDES DE DOCKER
+- proyecto: git clone https://github.com/platzi/docker
 #### Dockerfile
 ```
 # imagen node:12 como capa base
@@ -167,14 +161,13 @@ EXPOSE 3000
 # definir el comando por defecto a ejecutar cuando se corra el contenedor
 CMD [“node”, “index.js”]
 ```
-
-# construir la imagen de docker (-t para taggear la imagen)
+# construir la imagen con el contexto (.) y (-t) para taggear la imagen
 ```console
   > docker build -t platziapp .
 ```
-### 20: Layer cache
-- Docker aprovecha las capas construidas cuando no se producen cambios en ellas. Pero en el Dockerfile anterior si se quiere cambiar la version de node a 14, eso provocará que todas las siguientes capas sean invalidadas y tendran que reconstruirse nuevamente.
-- Desde la instrucción “COPY [“.”, “/usr/lib”]” se reconstruirán todas las capas siguientes cada que el código de la aplicación cambie. La capa “RUN npm Install” que construye los modulos de node no es deseable que se reconstruya cada vez que pase esto. Para ahorrarnos ese paso, solo copiamos los archivos necesarios y luego ejecutamos dicha instrucción, finalmente copiamos los demás archivos que incluyen index.js el cual si sufre cambios y reconstruimos, docker solo invalidará las capas que parten de ese punto
+### 20: LAYER CACHE
+- Docker aprovecha las capas construidas si no se producen cambios en estas. En el Dockerfile anterior, si se quiere cambiar la version de node a v14, esto provocará que todas las demás capas seran invalidadas y tendran que reconstruirse nuevamente al ejecutar docker build.
+- Desde la instrucción “COPY [“.”, “/usr/lib”]” se reconstruirán todas las capas siguientes cada que el código de la aplicación cambie. La capa “RUN npm Install” que construye los modulos de node no es deseable que se reconstruya cada vez que pase esto. Para ahorrarnos ese paso, solo copiamos los archivos necesarios y luego instalamos los modulos de node, finalmente copiamos los demás archivos que incluyen "index.js" el cual si sufre cambios y reconstruimos, docker solo invalidará las capas que parten de ese punto
 #### Dockerfile v2
 ```
 FROM node:12
@@ -196,62 +189,60 @@ EXPOSE 3000
 CMD ["node", "index.js"]
 ```
 
-Si no se desea buildear cada vez que se cambia el código podemos usar volúmenes.
+- Si no se desea buildear cada vez que se cambia el código podemos usar volúmenes.
 
-Con nodemon monitoreamos cambios en los archivos. Esta dependencia ya está insertada en el package.json así que basta con hacer lo siguiente:
+- Con nodemon monitoreamos cambios en los archivos. Esta dependencia ya está insertada en el package.json, así que basta con hacer lo siguiente:
 
 1. Cambiar el comando “CMD ["node", "index.js"]” a “CMD ["npx","nodemon", "index.js"]” y buildear nuevamente.
 
 2. Ejecutar el “docker run”, esta vez usando bind mounts
- 
-	> docker run --rm -p 3000:3000 -v `pwd`/index.js:/usr/src/index.js platziapp
+```console
+docker run --rm -p 3000:3000 -v `pwd`/index.js:/usr/src/index.js platziapp
+```
+- Ahora si se hacen cambios en "index.js" estos se reflejarán en http://localhost:3000/
 
-Ahora se pueden hacer cambios en el index.js y estos se reflejarán en http://localhost:3000/
+### 21: DOCKER NETWORKING
 
-
-### 21: Docker Networking: colaboración entre contenedores
-
-En “index.js” la forma de conectarse a mongo es mediante la instrucción:
-
-	const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/test';
-
-Como se aprecia, si no hay una variable de entorno, usa localhost, por lo que para conectar nuestro contenedor con el contenedor de mongo se usarán las networks de docker
+En "index.js" la forma de conectarse a mongo es mediante la instrucción:
+```python
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/test';
+```
+Como se aprecia, si no hay una variable de entorno, usa localhost. Para conectar nuestro contenedor python con el contenedor mongo se usarán las networks
 
 - Listar las redes existentes
 ```console
-	> docker network ls
+docker network ls
 ```
-# para crear una network usamos (--attachable permite que otros contenedores se puedan conectar a la red)
+1. Crear una network  (--attachable) para que otros contenedores se puedan conectar a esta red
 ```console
-	> docker network create --attachable <network-name>
-	> docker network create --attachable platzinet
+docker network create --attachable <network-name>
+docker network create --attachable platzinet  <-- aqui estamos creando una red llamada platzinet
 ```
-# crearemos un contenedor y luego lo conectaremos a la network
+2. Crear un contenedor y conectarse a la network platzinet
 ```console
-	> docker run -d --name db mongo
+docker run -d --name db mongo
 
-	> docker network connect <network> <container>
-	> docker network connect platzinet db
+docker network connect <network> <container-id-or-name>
+docker network connect platzinet db
 ```
-# con inspect podemos ver que ya se encuentra un contenedor conectado en esa red
+# Inspeccionar una red
 ```console
-	> docker network inspect <network>
-	> docker network inspect platzinet
+docker network inspect <network>
 ```
-# corremos el contenedor platziapp, esta vez le especificamos una variable de entorno que está siendo usada en el código index.js del contenedor para conectarse a la base de datos.
+3. Ejecutar el contenedor a partir de platziapp, le especificamos una variable de entorno (--env) que será usada en el "index.js" para conectarse a la base de datos
 ```console
-	>	 docker run -d --name app -p 3000:3000 --env MONGO_URL=mongodb://db:27017/test platziapp
+docker run -d --name app -p 3000:3000 --env MONGO_URL=mongodb://db:27017/test platziapp
 ```
-# en la variable de entorno especificamos el nombre del contenedor “db” ya que en docker cuando dos contenedores están en la misma network, no es necesario indicar el host ya que pueden encontrarse por sus nombres.
+En la variable de entorno se especifica el nombre del contenedor "db". En docker cuando dos contenedores están en la misma red, no es necesario indicar el host ya que pueden encontrarse por sus nombres de contenedor
 
-# la aplicación aún no se conectará a la base de datos porque el contenedor app no está en la red platziapp, por lo que procedemos a agregarlo
+4. La aplicación aún no se conectará a mongo porque el contenedor app no está en la red platzinet. procedemos a agregarlo
 ```console
-	 > docker network connect platzinet app
+docker network connect platzinet app
 ```
-# ahora si la aplicación correrá correctamente en http://localhost:3000/ ya nos indica conectado a la base de datos.
+Ahora la aplicación correrá correctamente en http://localhost:3000/ y ya indica la conexion a mongo.
 
-### 23: Docker Compose
-- Docker compose permite describir de forma declarativa la arquitectura de servicios que una aplicación necesita.
+### 23: DOCKER COMPOSE
+Docker compose permite describir de forma declarativa la arquitectura de servicios que una aplicación necesita.
 #### docker-compose
 ```
 version: "3.8"
@@ -267,36 +258,35 @@ services:
   db:
     image: mongo
 ```
-# para ejecutar el docker-compose.yml
+- Ejecutar el docker-compose.yml
 ```console
-(1) crear una network con contenedores conectados a esta
-	> docker-compose up
-(2) lo mismo pero en modo detach
-  > docker-compose up -d
+docker-compose up
+docker-compose up -d  <-- en modo detach
 ```
-### 23: Docker Compose: subcomandos
+### 23: DOCKER COMPOSE. SUBCOMANDOS
 
-# ver los logs de todos los servicios
-
-	> docker-compose logs
-
-# ver solo los logs de un servicio o varios
-
-	> docker-compose logs <service1> <service2> …
-
-# hacer un follow de los logs
-
-	> docker-compose logs -f <service>
-
-# correr un comando en un contenedor
-
-	> docker-compose exec <service> <command>
-
-# limpiar todo el estado de nuestro docker-compose destruyendo todo lo que tenemos. Elimina contenedores, servicios y redes
-
-	> docker-compose down
-### 24: Docker Compose
-- para no usar una imagen ya construida e inmutable, podemos hacer el build desde el mismo docker-compose.yml
+- Ver los logs de todos los servicios
+```console
+docker-compose logs
+```
+- Ver solo los logs de un servicio o varios
+```console
+docker-compose logs <service1> <service2> …
+```
+- Hacer un follow de los logs de un servicio
+```console
+docker-compose logs -f <service>
+```
+- Correr un comando en un contenedor
+```console
+docker-compose exec <service> <command>
+```
+- Limpiar todo el estado de nuestro docker-compose destruyendo todo lo que tenemos. Elimina contenedores, servicios y redes
+```console
+docker-compose down
+````
+### 24: DOCKER COMPOSE
+para no usar una imagen ya construida e inmutable, podemos hacer el build desde el mismo docker-compose.yml
 #### docker-compose v2
 ```
 version: "3.8"
@@ -314,7 +304,7 @@ services:
 ```
 Creamos un volumen para el servicio app para poder hacer cambios y que en el contenedor se reflejen
 
-docker-compose v3
+#### docker-compose v3
 ```
 version: "3.8"
 services:
@@ -359,9 +349,9 @@ services:
 - El compose override es un compose file que sirve para personalizar o hacer pequeños cambios propios para nuestro ambiente sobre el compose file original si necesidad de alterar el archivo original.
 
 # para crear el archivo
-
-	> touch docker-compose.override.yml
-
+```console
+touch docker-compose.override.yml
+```
 
 # en este archivo solo se especifican las cosas que se desean sobrescribir o aumentar
 
@@ -371,57 +361,55 @@ Ver escalabilidad final del video…???????????
 
 ### 26: Administrando ambiente de docker
 
-
- en este archivo solo se especifican las cosas que se desean sobrescribir o aumentar
-
-
-# mostrar todos los ids de todos los contenedores
-
-	> docker ps -aq
-
-# eliminar todos los contenedores
-
-	> docker rm -f $(docker ps -aq)
-
-# eliminar todos los volumenes que no se están usando
-
-	> docker volume prune
-
-# eliminar todas las networks que no se están usando
-
-	> docker network prune
-
-# borrar todo lo que no esta siendo usado: contenedores, imágenes, volumenes, redes
-
-	> docker system prune
-
-#  limitar uso de memoria a un contenedor
-
-	> docker run -d --name app --memory 1g platziapp
-
-# para ver cuanta memoria esta consumiendo una aplicación
-
-	> docker stats
+en este archivo solo se especifican las cosas que se desean sobrescribir o aumentar
 
 
-### 27: Deteniendo contenedores correctamente: SHELL vs. EXEC
+- mostrar todos los ids de todos los contenedores
+```console
+> docker ps -aq
+```
+- eliminar todos los contenedores
+```console
+docker rm -f $(docker ps -aq)
+```
+- eliminar todos los volumenes que no se están usando
+```console
+docker volume prune
+```
+- eliminar todas las networks que no se están usando
+```console
+docker network prune
+```
+- borrar todo lo que no esta siendo usado: contenedores, imágenes, volumenes, redes
+```console
+docker system prune
+```
+-  limitar uso de memoria a un contenedor
+```console
+docker run -d --name app --memory 1g platziapp
+```
+- para ver cuanta memoria esta consumiendo una aplicación
+```console
+docker stats
+```
+### 27: DETENER CONTENEDORES CORRECTAMENTE > SHELL vs. EXEC
 
 
 Docker para indicarla a un proceso que tiene que terminar le va a mandar una señal SIGTERM y si el contenedor no response después de un determinado tiempo, docker manda una señal SIGKILL para forzar la salida.
 
-# enviar señal SIGTERM para terminar un contenedor
+- enviar señal SIGTERM para terminar un contenedor
+```console
+docker stop <container>
+```
+- enviar directamente una señal SIGKILL para terminar un contenedor
+```console
+docker kill <container>
+```
 
-	> docker stop <container>
-
-# enviar directamente una señal SIGKILL para terminar un contenedor
-
-	> docker kill <container>
+### 28: Contenedores ejecutables correctamente: ENTRYPOINT vs. CMD
 
 
-!!! docker_28 Contenedores ejecutables correctamente: ENTRYPOINT vs. CMD
-
-
-!!! docker_29  El contexto de build
+### 29: El contexto de build
 
 
 Existe un archivo similar a .gitignore que se llama .dockerignore y lo que pongamos ahí le decimos a docker que no los considere para construir imágenes o espejar.
