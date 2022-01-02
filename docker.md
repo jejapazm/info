@@ -91,12 +91,32 @@ docker logs -f <container-id-or-name>   <-- (-f) Enchufarse a los logs
 docker logs --tail <number> -f <container-id-or-name>   <-- (--tail) ver solo las ultimas <number> entradas de log
 ```
 ### BIND MOUNTS
-- Crear un bind mount para una conexion bidireccional de archivos
+- Crear un contenedor con un bind mount
 ```console
-docker run -d --name <container-name> -v <host-folder-or-file>:<docker-folder-or-file> <image>
+docker run -d --name <container-name> -v <host-route>:<container-route> <image>
 docker run -d --name db -v /Users/jeffersonpazmino/dockerdata:/data/db mongo
 ```
-### IMAGENES
+- Conectar un contenedor de forma explícita
+```console
+docker run -itd --mount type=bind,source=<host-route>,target=<container-route> <image>
+```
+
+### VOLUME MOUNTS
+- Por defecto en linux se crean en ***/var/lib/docker/volumes***
+- Para listar todos los volúmenes
+```console
+docker volume ls
+```
+- Crear un volumen
+```console
+docker volume create <volume_name>
+```
+- Crear un contenedor con un volumen existente
+```console
+docker run -itd -v <volume_name>:<container_route>
+```
+
+### IMÁGENES
 - Ver imágenes en el entorno local
 ```console
 docker image ls
@@ -450,6 +470,43 @@ Existe la capacidad de ejecutar docker desde otros contenedores con un concepto 
 
 
 Revisar..
+
+
+
+
+
+
+
+Eliminar todos contenedores vacios
+docker container prune
+docker image prune
+docker volume prune
+
+Conectar y desconectar un contenedor con un a red
+docker network connect <network-name> <contaner-id>
+docker network disconnect <network-name> <contaner-id>
+
+
+Crear una red
+docker network create --driver=bridge --subnet=182.1.0.1/16 <network-name>
+
+
+docker container run -itd --name=<name> --net=<network-name> <image>
+
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+
+docker network inspect <network-id>
+
+listar contenedores
+docker network ls
+
+eliminar una red en especifico
+docker network rm <network-id>
+
+eliminar las que no estan siendo usada por ningun contenedor
+docker network prune
+
 
 
 
