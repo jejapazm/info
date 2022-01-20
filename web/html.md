@@ -89,8 +89,139 @@ p {
 ```
 
 
+#### Colores
+
+Por nombre
+```css
+color: red
+```
+Hexadecimal #xxx #xxxxxx
+```css
+color: #212121
+```
+rgb o hsl
+```css
+color: rgb(red, green, blue)
+```
+rgba o hsla
+```css
+color: rgba(red, green, blue, alpha)
+```
+
+#### Pseudoselectores y Custom Properties
+```css
+:root {  /* custom properties */
+    --blanco: #ffffff;
+    --oscuro: #212121;
+    --primario: #ffc107;
+    --fuente-principal: 3.8rem;
+}
+.titulo {
+    color: var(--blanco);
+}
+```
+#### Fuentes
+
+https://fonts.google.com/
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;700&display=swap" rel="stylesheet">
+```
+```css
+font-family: 'Krub', sans-serif;
+```
+#### Normalize CSS
+https://necolas.github.io/normalize.css/
+```html
+<link rel="preload" href="css/normalize.css" as="style">
+<link rel="stylesheet" href="css/normalize.css">
+```
+Librería que normaliza la apariencia del css en los diferentes navegadores, se agrega como una hoja de estilos
+
+#### Display
+Todos los elementos HTML tienen un display block o display inline por default
+
+| Selector                     | Descripción                                  |
+| -----------                  |    -----------                               |
+| ```display: block;```        | Elementos que se colocarán uno debajo de otro sin importar su tamaño o contenido. Ejm: parrados, headers, div |
+| ```display: inline;```       | El siguiente elemento se posicionará a la derecha una vez que haya tomado todo el espacio que requiere: Ejm: a, img |
+| ```display: flex;```         | Habilita flexbox, un modelo unidimensional. Tiene dos ejes: fila o columna |
+| ```display: grid;```         | Habilita Grid, un modelo bidimensional |
 
 
+#### Enfoques para escribir código CSS
+##### BEM – Bloque, Elementos y Modificadores
+El código tiene una clase para el bloque principal y luego se va describiendo cada elemento con una clase y una clase para sus modificadores
+```css
+.card {} /*  bloque */
+.card__titulo {} /* elementos */
+.card__imagen {}
+.card__boton {}
+.card__boton--activate {} /* modificador */
+```
+##### Utility First
+Se crean clases con una sola propiedad que describen que es lo que harían.
+```css
+.text-center {}  /* para centrar el texto */
+.color-red {} /* para color rojo */
+.bg-blue {} /* fondo azul */
+.p-2 {} /* padding de 2 */
+```
+#### Módulos
+Se define el contenido principal y después se va seleccionando cada uno de los elementos html
+```css
+.card {}
+.card h2 {}
+.card img {}
+```
 
+### Responsing Web Design
+Enfoque para que los diseños se adapten a las diferentes  interacciones del usuario y a la resolución que utilizan
+##### Media Queries
+```css
+@media (min-width: 480px) {
+    /* code */
+}
+@media (min-width: 768px) {
+    /* code */
+}
+```
+##### Estándar en Media Queries
+```
+480px cambia cuando sea un teléfono
+768px cambia cuando sea una tablet
+1149px para laptop o desktop pc
+1400px dispositivos más grandes
+```
 
+### Box Model
+El tamaño de lo que se muestra en pantalla está delimitado por 4 cosas: el tamaño del contenido, tamaño de relleno (padding), tamaño del borde (border) y el margen (margin)
+```css
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+```
+### Posicionar elementos
 
+```css
+.hero {
+    background-color: rosybrown;
+    height: 45rem;
+    width: 45rem;
+    padding: 2rem;
+    position: relative;
+}
+.contenido-hero {
+    position: absolute;
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    right: 0;
+    top: 0;
+}
+```
