@@ -148,6 +148,12 @@ docker history alpine:custom
 - 5. Con el comando "dive alpine:custom" se puede ver mejor el history https://github.com/wagoodman/dive
 
 ### PUBLICAR IMAGENES
+
+- Construir imagen con multiples tags
+```console
+docker build -t <repository>/<name>:tag1 -t <repository>/<name>:tag2 -t <repository>/<name> .
+docker build -t rep1/name1:tag1 -t name1:tag2 -t name2 .
+```
 - 1. Retaggear la imagen con el nombre del repositorio para subirla
 ```console
 docker tag alpine:custom <repository-username>:custom
