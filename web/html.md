@@ -81,20 +81,21 @@ p { color: red!important; }
 
 #### Colores
 
-Por nombre
+
 ```css
+/* Por nombre */
 color: red
 ```
-Hexadecimal #xxx #xxxxxx
 ```css
+/* Hexadecimal #xxx #xxxxxx */
 color: #212121
 ```
-rgb o hsl
 ```css
+/* rgb o hsl */
 color: rgb(red, green, blue)
 ```
-rgba o hsla
 ```css
+/* rgba o hsla*/
 color: rgba(red, green, blue, alpha)
 ```
 
