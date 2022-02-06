@@ -1,4 +1,4 @@
-## Headings, Paraghraps
+## Headings, Paragraphs
 Se define el texto mas relevante con ```<h1>```, solo usar un ```<h1>``` en toda la página ya que puede confundir al navegador sobre cual es el contenido más importante. Colocar etiquetas ```<h2>``` hasta ```<h6>``` considerando la importancia y estilo de los textos importantes. Para los textos menos importantes o información usar ```<p>```
 
 ## Estructurar el HTML
