@@ -47,12 +47,6 @@ Se define el texto mas relevante con ```<h1>```, solo usar un ```<h1>``` en toda
 | Todos los hijos               | ```.class-name > p {}```                     |
 
 
-### Preload
-Para descargar pronto cosas específicas para que el usuario las vea de inmediato
-```html
-<link rel="preload" href="css/styles.css" as="style">
-<link rel="stylesheet" href="css/styles.css">
-```
 ### Medidas px, em, rem
 
 #### Hack para unidades px y rem => 1rem = 10px
@@ -214,3 +208,63 @@ html {
     top: 0; /* <----- */
 }
 ```
+
+### Lazy Loading
+Es una estrategia para identificar los recursos como no bloqueantes (no críticos) y cargarlos solo cuando sea necesario. 
+Se puede usar para indicar al navegador que posponga la carga de imágenes/iframes que están fuera de la pantalla hasta que el usuario se desplace cerca de ellos.
+```html
+<img loading="lazy" src="img/blog2.jpg" alt="imagen blog">
+<iframe src="video-player.html" title="..." loading="lazy"></iframe>
+```
+
+### Preload
+El navegador descarga los elementos según los va leyendo del HTML, 
+Preload se aplica a los elementos que se requiere que se cargen inmediatamente mejorando así el performance
+```html
+<link rel="preload" href="css/styles.css" as="style">
+<link rel="stylesheet" href="css/styles.css">
+
+<link rel="preload" href="https://fonts.googleapis.com/css2?f..." crossorigin="crossorigin" as="font">
+<link href="https://fonts.googleapis.com/css2?f..." rel="stylesheet">
+```
+
+### Prefetch
+Permite cargar la siguiente página que se espera que el usuario visite para darle una mejor experiencia.
+Google Analytics permite ver que pagina es la que los usuarios visitan desde cierta pagina
+```html
+<link rel="prefetch" href="nosotros.html" as="document">
+```
+
+### WebP
+Webp tiene esun formato de imágenes para web que tienen la misma calidad que los otros formatos pero es más ligero
+- ```<picture>``` soporta diferentes formatos de imágenes y dependiendo del navegador se va a cargar la primera que soporte.
+```html
+<picture>
+    <source loading="lazy" srcset="img/blog.webp" type="image/webp">
+    <img loading="lazy" src="img/blog.jpg" alt="imagen blog">
+</picture>
+```
+
+### Webp en CSS
+Con modernizer podemos detectar las caracteristicas de un navegador y ver si soporta webp para en base a eso ejecutar un código u otro
+En este caso, si lo soporta usamos la clase .webp, sino, la clase .no-webp para la clase .header
+```css
+.webp .header {
+    background-image: url('../img/banner.webp');
+}
+.no-webp .header {
+    background-image: url('../img/banner.jpg');
+}
+```
+
+### Meta description
+ofrece una descripción de lo que trata el sitio web
+```html
+<header>
+  <meta name="description" content="Página web de desarrollador Freelancer">
+</header>
+```
+
+
+
+
