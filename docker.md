@@ -169,36 +169,27 @@ Cuando se corre un contenedor, docker ofrece una nueva capa mutable de este. Con
 - proyecto: git clone https://github.com/platzi/docker
 #### Dockerfile
 ```
-# imagen node:12 como capa base
+# capa base
 FROM node:12
-
-# copiar los archivos del contexto de build a /usr/lib 
+# copiar archivos del contexto a /usr/lib 
 COPY [“.”, “/usr/lib”]
-
-# comando cd /usr/lib
+# directorio de trabajo
 WORKDIR /usr/lib
-
-# instalar dependencias de node
+# dependencias de node
 RUN npm Install
-
-# puerto para poder exponer el contenedor
+# puerto para exponer el contenedor
 EXPOSE 3000
-
-# definir el comando por defecto a ejecutar cuando se corra el contenedor
+# definir el comando a ejecutar cuando se corra el contenedor
 CMD [“node”, “index.js”]
 ```
-# construir la imagen con el contexto (.) y (-t) para taggear la imagen
-```console
-  > docker build -t platziapp .
-```
+
 ### 20: LAYER CACHE
 - Docker aprovecha las capas construidas si no se producen cambios en estas. En el Dockerfile anterior, si se quiere cambiar la version de node a v14, esto provocará que todas las demás capas seran invalidadas y tendran que reconstruirse nuevamente al ejecutar docker build.
 - Desde la instrucción “COPY [“.”, “/usr/lib”]” se reconstruirán todas las capas siguientes cada que el código de la aplicación cambie. La capa “RUN npm Install” que construye los modulos de node no es deseable que se reconstruya cada vez que pase esto. Para ahorrarnos ese paso, solo copiamos los archivos necesarios y luego instalamos los modulos de node, finalmente copiamos los demás archivos que incluyen "index.js" el cual si sufre cambios y reconstruimos, docker solo invalidará las capas que parten de ese punto
 #### Dockerfile v2
 ```
 FROM node:12
-
-# solo archivos necesarios para el npm install
+# solo archivos necesarios para npm install
 
 COPY ["package.json","package-lock.json", "/usr/src/"]
 
