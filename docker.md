@@ -151,17 +151,16 @@ docker history alpine:custom
 
 - Construir imagen con multiples tags
 ```console
-docker build -t <repository>/<name>:tag1 -t <repository>/<name>:tag2 -t <repository>/<name> .
-docker build -t rep1/name1:tag1 -t name1:tag2 -t name2 .
+docker build -t <repository>/<name>:tag1 -t <repository>/<name>:tag2 .
 ```
 - 1. Retaggear la imagen con el nombre del repositorio para subirla
 ```console
-docker tag alpine:custom <repository-username>:custom
+docker tag <repository1>/<name1>:tag1 <repository2>/<name2>:tag2
 ```
 - 2. Publicar la imagen
 ```console
 docker login
-docker push <repository-username>:custom
+docker push <repository>/<name>:tag
 ```
 Cuando se corre un contenedor, docker ofrece una nueva capa mutable de este. Con docker commit se puede crear una capa inmutable a partir de los cambios hechos en la capa mutable del contenedor creado.
 
