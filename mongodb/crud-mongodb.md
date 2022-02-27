@@ -4,6 +4,7 @@
 ### Insertar
 
 ```js
+> db.inventory.insertOne({"name":"Duracell - AAA Batteries (4-Pack)","type":"HardGood","price":5.49,"category":[{"id":"pcmcat312300050015","name":"Connected Home & Housewares"},{"id":"pcmcat248700050021","name":"Housewares"},{"id":"pcmcat303600050001","name":"Household Batteries"},{"id":"abcat0208002","name":"Alkaline Batteries"}],"manufacturer":"Duracell","model":"MN2400B4Z"})
 > db.products.insertOne({name: "laptop", price: 100})
 > db.products.insertMany({name: "laptop", price: 100},{name: "headphones", price: 30},{name: "mouse", price: 20})
 ```
