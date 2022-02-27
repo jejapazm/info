@@ -1,7 +1,7 @@
 
 ### Operaciones CRUD
 
-###Insertar
+### Insertar
 
 ```js
 > db.products.insertOne({name: "laptop", price: 100})
