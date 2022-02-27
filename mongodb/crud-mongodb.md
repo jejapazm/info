@@ -6,7 +6,6 @@
 ```js
 > db.inventory.insertOne(
 {
-    _id: ObjectId("621c0d2c9731244904a33890"),
     name: 'Duracell - AAA Batteries (4-Pack)',
     type: 'HardGood',
     price: 5.49,
