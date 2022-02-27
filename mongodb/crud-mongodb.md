@@ -4,6 +4,7 @@
 ### Insertar
 
 ```js
+// Insertar uno
 > db.inventory.insertOne(
 {
     name: 'Duracell - AAA Batteries (4-Pack)',
@@ -19,6 +20,7 @@
     model: 'MN2400B4Z'
   }
 )
+// Insertar varios
 > db.products.insertMany(
   {
     name: 'IK Multimedia - iRig Stomp - Black',
