@@ -19,8 +19,32 @@
     model: 'MN2400B4Z'
   }
 )
-> db.products.insertOne({name: "laptop", price: 100})
-> db.products.insertMany({name: "laptop", price: 100},{name: "headphones", price: 30},{name: "mouse", price: 20})
+> db.products.insertMany(
+  {
+    name: 'IK Multimedia - iRig Stomp - Black',
+    type: 'HardGood',
+    price: 59.99,
+    category: [
+      { id: 'abcat0207000', name: 'Musical Instruments' },
+      { id: 'abcat0208024', name: 'Musical Instrument Accessories' },
+      { id: 'pcmcat152100050033', name: 'DJ Equipment Accessories' }
+    ],
+    manufacturer: 'IK Multimedia',
+    model: 'IRIGSTOMPIN'
+  },
+  {
+    name: 'Maytag - 25.6 Cu. Ft. Side-by-Side Refrigerator',
+    type: 'HardGood',
+    price: 1699.99,
+    category: [
+      { id: 'abcat0900000', name: 'Appliances' },
+      { id: 'abcat0901000', name: 'Refrigerators' },
+      { id: 'pcmcat367400050001', name: 'All Refrigerators' }
+    ],
+    manufacturer: 'Maytag',
+    model: 'MSB26C6MDM'
+  }
+)
 ```
 
 ### actualizar
