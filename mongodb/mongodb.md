@@ -17,6 +17,11 @@
 > db.dropDatabase()
 ```
 
+### Contar
+```js
+db.inventory.find({}).count()
+```
+
 ### Proyecciones
 ```js
 > db.inventory.findOne({Status: "A"})
