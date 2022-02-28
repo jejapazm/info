@@ -1,94 +1,84 @@
-
-### 1: DESARROLLAR, DISTRIBUIR Y EJECUTAR CON DOCKER
-
-#### Problems when building:
-- Development dependencies (packages)
-- Runtime versions
-- Equivalence of development environments (code sharing)
-- Equivalence of production environments(go to production)
-- Versions / compatibility(integration of other services e.g.: databases)
-#### Problems when distributing:
-- Different build generations
-- Access to production servers
-- Native vs. distributed execution
-- Serverless
-#### Problems when executing:
-- Application dependencies
-- Operating System Compatibility
-- Availability of external services
-- Hardware Resources
-#### Docker allows: Build, distribute and run your code anywhere without worrying.
-
-- Version de docker instalada
+### Comandos generales
+Version de docker
 ```console
 docker --version
 ```
-- Información de docker
+Información de docker
 ```console
 docker info
 ```
 
 ### COMANDOS
-- Ejecutar un contenedor a partir de una imagen
+Ejecutar contenedor a partir de una imagen
 ```console
 docker run <image>
-docker run --name <container-name> <image>  <-- (--name) para especificar un nombre al contenedor
-docker run -it <image>  <-- (-it) para ejecutar en modo interactivo
-docker run -itd <image>  <-- (-d) para ejecutar en modo detach: no se vincula la I/O estandar con la CLI, sino vinculada en background
+# --name para especificar un nombre al contenedor
+docker run --name <container-name> <image>
+# -it para ejecutar el contenedor en modo interactivo
+docker run -it <image>
+# para ejecutar en modo detach: no se vincula la I/O estandar con la CLI, sino vinculada en background
+docker run -itd <image>
 ```
-- Ver los contenedores que están corriendo
+Ver los contenedores que están corriendo
 ```console
 docker ps
-docker ps -a  <-- (-a) para tambien listar los contenedores detenidos
+# -a para tambien listar los contenedores detenidos
+docker ps -a
 ```
-- Detener un contenedor
+Detener un contenedor
 ```console
-docker stop <container-id-or-name>
+docker stop <container-id,name>
 ```
-- Eliminar contenedores
+Eliminar contenedores
 ```console
-docker rm <container-id-or-name>  <-- elimina contenedores que estan detenidos
-docker rm -f <container-id-or-name>  <-- forza la eliminacion de contenedores que estan corriendo
-docker container prune  <-- elimina todos los contenedores
-docker run --rm -p <image>  <-- eliminar un contenedor una vez que se detenga
+# Eliminar contenedores que estan detenidos
+docker rm <container-id,name>
+# Forzar la eliminacion de contenedores que estan corriendo
+docker rm -f <container-id,name>
+# Eliminar todos los contenedores no usados
+docker container prune
+# Eliminar un contenedor una vez que se detenga
+docker run --rm -p <image>
 ```
-- Inspeccionar un contenedor
+Inspeccionar un contenedor
 ```console
 docker inspect <container-id-or-name>
 ```
-- Renombrar un contenedor
+Renombrar un contenedor
 ```console
 docker rename <initial-container-name> <target-container-name>
 ```
-No se permite tener dos contenedores con el mismo nombre
 
 ### CICLO DE VIDA DE UN CONTENEDOR
-Un contenedor se mantiene activo si el proceso principal (command) esté corriendo: por ejemplo ejecutar el bash de ubuntu en modo interactivo, si lo detenemos con "exit", se termina el bash y por ende el contenedor se detiene.
+Un contenedor se mantiene ejecutandose si el proceso principal (command) esta activo: Luego de ejecutar el bash de ubuntu en modo -it, si lo detenemos con "exit", se termina el proceso bash y por ende el contenedor se detiene.
 - Correr un contenedor sobrescribiendo el comando principal bash para que el contenedor permanezca levantado y en modo detach
 ```console
 docker run --name <container-name> -d <image> tail -f <main-command>
-docker run --name always-up -d ubuntu tail -f /dev/null  <-- aqui un contenedor de ubuntu se crea y se ejecuta pero se sobreescribe el proceso principal, el contenedor se mantiene levantado
+# Crear un contenedor de ubuntu y se ejecutarlo sobreescribiendo el proceso principal con /dev/null
+docker run --name always-up -d ubuntu tail -f /dev/null
 ```
-- Ejecutar un comando en un contenedor existente y que está corriendo
+- Ejecutar un comando en un contenedor activo
 ```console
-docker exec -it <container-[name,id]> <command>
-docker exec -it always-up bash   <— aquí bash no es el proceso principal, asi que se lo puede terminar pero el contenedor ahorab ya no va a terminar
+docker exec -it <container-name,id> <command>
+docker exec -it always-up bash   <— aquí bash no es el proceso principal, se lo puede terminar sin que el contenedor se detenga
 ```
 - Inspeccionar el process id principal del contenedor
 ```console
 docker inspect --format '{{.State.Pid}}' <container-name>
 ```
-Cada contenedor tiene su propio Stack de networking (su propia interfaz de red virtual)
-- Exponer un puerto del contenedor (-p)
+### Exponer puertos de un contenedor
 ```console
 docker run -d --name <container-name> -p <exposed-port>:<container-port> <image>
-docker run -d --name proxy -p 8080:80 proxy  <-- aqui se expone el puerto 80 del contenedor en el puerto 8080 del host mientras se ejecuta el contenedor en modo detach
+# Exponer el puerto 80 del contenedor proxy en el puerto 8080 del host mientras se ejecuta el contenedor en modo detach
+docker run -d --name proxy -p 8080:80 proxy
 ```
 ### VER LOS LOGS DE UN CONTENEDOR
 ```console
-docker logs <container-id-or-name>
-docker logs -f <container-id-or-name>   <-- (-f) Enchufarse a los logs
-docker logs --tail <number> -f <container-id-or-name>   <-- (--tail) ver solo las ultimas <number> entradas de log
+docker logs <container-id,name>
+# -f para enchufarse a los logs 
+docker logs -f <container-id,name>
+# --tail para ver las ultimas <number> entradas de log
+docker logs --tail <number> -f <container-id,name>
 ```
 ### BIND MOUNTS
 - Crear un contenedor con un bind mount
@@ -96,7 +86,7 @@ docker logs --tail <number> -f <container-id-or-name>   <-- (--tail) ver solo la
 docker run -d --name <container-name> -v <host-route>:<container-route> <image>
 docker run -d --name db -v /Users/jeffersonpazmino/dockerdata:/data/db mongo
 ```
-- Conectar un contenedor de forma explícita
+- forma explícita
 ```console
 docker run -itd --mount type=bind,source=<host-route>,target=<container-route> <image>
 ```
