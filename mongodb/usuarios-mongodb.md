@@ -23,8 +23,8 @@ db.updateUser(
     "analytics",
     {
         roles:[
-            {role:"read",db:"inventory"},
-            {role:"read",db:"clients"}
+            {role:"read", db:"inventory"},
+            {role:"read", db:"clients"}
         ]
     }
 )
