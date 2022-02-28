@@ -7,7 +7,7 @@ db.createUser({
     user:"analytics",
     pwd:"k8s@!jaef**R44",
     roles:[
-        { role:"read", db:"inventory" },
+        {role:"read", db:"inventory"},
     ],
     passwordDigestor: "server"
 })
