@@ -65,6 +65,15 @@
   {
     $set: {"type":"Hard-Good"}
   }
+  {upsert:false, multi:true}
+)
+// Quitar propiedades con $unset
+b.records.update(
+  {},
+  {
+      $unset:{"client_name":"grupo quirola"}
+  },
+  {upsert:false, multi:true}
 )
 ```
 
