@@ -5,10 +5,9 @@ use admin
 // crear el usuario
 db.createUser({
     user:"analytics",
-    pwd:"Pf%e_Q&etart@H7#",
+    pwd:"k8s@!jaef**R44",
     roles:[
-        { role:"read", db:"mqtt_airscan" },
-        { role:"read", db:"mqtt_aquascan" }
+        { role:"read", db:"inventory" },
     ],
     passwordDigestor: "server"
 })
@@ -22,10 +21,10 @@ db.dropUser("analytics")
 ```js
 db.updateUser(
     "analytics",
-    {roles:
-        [
-            {role:"read",db:"mqtt_aquascan"},
-            {role:"read",db:"mqtt_airscan"}
+    {
+        roles:[
+            {role:"read",db:"inventory"},
+            {role:"read",db:"clients"}
         ]
     }
 )
