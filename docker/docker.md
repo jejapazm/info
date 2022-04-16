@@ -29,6 +29,10 @@ Detener un contenedor
 ```console
 docker stop <container-id,name>
 ```
+Iniciar un contenedor
+```console
+docker start <container-id,name>
+```
 Eliminar contenedores
 ```console
 # Eliminar contenedores que estan detenidos
